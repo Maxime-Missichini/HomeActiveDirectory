@@ -21,14 +21,13 @@ foreach($user in $USERS_LIST) {
     Write-Host "Creating user: $($username)" -BackgroundColor Black -ForegroundColor Red
 
     # Adding user
-    New-ADUser -AccountPassword $password
-               -GivenName $first
-               -Surname $last
-               -DisplayName $username
-               -Name $username
-               -EmployeeID $username
-               -PasswordNeverExpires $true
-               # Path to organisational unit and put in it
-               -Path "ou=_USERS,$(([ADSI]`"").distinguishedName)"
+    New-ADUser -AccountPassword $password `
+               -GivenName $first `
+               -Surname $last `
+               -DisplayName $username `
+               -Name $username `
+               -EmployeeID $username `
+               -PasswordNeverExpires $true `
+               -Path "ou=_USERS,$(([ADSI]`"").distinguishedName)" `
                -Enabled $true
 }
