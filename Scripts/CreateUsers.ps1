@@ -1,18 +1,15 @@
-$USERS_PASSWORD = $args[0]
-$USERS_LIST = Get-Content .\names.txt
+$USERS_LIST = Get-Content .\usersInfos.txt
 
-# Protection against injections :)
-$password = ConvertTo-SecureString $USERS_PASSWORD -AsPlainText -Force
-
-# Create an organization unit with name _USERS, unprotected from deletion
+# Create an organization unit with name _USERS, unprotected from deletion so we can delete if there is errors
 New-ADOrganizationalUnit -Name _USERS -ProtectedFromAccidentalDeletion $false
 
 foreach($user in $USERS_LIST) {
-    # Formatting
+    # Formatting stuff
 
     # Split line based on space
     $first = $user.Split(" ")[0].ToLower()
     $last = $user.Split(" ")[1].ToLower()
+    $password = ConvertTo-SecureString $user.Split(" ")[2].ToLower() -AsPlainText -Force
 
     # Then compute username (concat)
     $username = "$($first.Substring(0,1))$($last)".ToLower()
@@ -29,5 +26,5 @@ foreach($user in $USERS_LIST) {
                -EmployeeID $username `
                -PasswordNeverExpires $true `
                -Path "ou=_USERS,$(([ADSI]`"").distinguishedName)" `
-               -Enabled $true `
+               -Enabled $true
 }
